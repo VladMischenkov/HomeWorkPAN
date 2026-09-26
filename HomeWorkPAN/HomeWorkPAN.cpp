@@ -19,7 +19,7 @@ int main()
 
     cout << "Cl:";
     cin >> cl;
-
+    cout << "Calculated L\n";
     cout << "Result: " << calculate_L(S, V, ro, cl);
 
 }
