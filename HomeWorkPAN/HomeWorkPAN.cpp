@@ -5,6 +5,8 @@ double g = 9.8067;
 double calculate_L(double S, double V, double ro, double cl);
 double calculate_acceleration(double T, double D, double m);
 double calculate_acceleration_y(double L, double m);
+double calculate_time(double h, double a_y);
+
 
 int main()
 {
@@ -34,3 +36,8 @@ double calculate_acceleration_y(double L, double m) {
 double calculate_L(double S, double V, double ro, double cl) {
     return 0.5 * ro * V * V * S * cl;
 }
+
+double calculate_time(double h, double a_y) {
+    return sqrt(2 * h / a_y);
+}
+
