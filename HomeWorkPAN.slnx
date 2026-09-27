@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="HomeWorkPAN/HomeWorkPAN.vcxproj" />
+  <Project Path="HomeWorkPAN/HomeWorkPAN.vcxproj" Id="9bd63d64-069c-4f2f-b164-fd8c9e914e30" />
 </Solution>
