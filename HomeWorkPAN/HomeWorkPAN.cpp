@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <iomanip>
 using namespace std;
 
 double g = 9.8067;
@@ -47,11 +48,29 @@ public:
     void calculateTime(double ro, double h) {
         t = calculate_time(h, a_y);
     }
+    void calculateOptimalForce(double h, double Tmin, double Tmax, double Tstep) {
+        cout << "\n|   T    | Vert. acceleration | Time to reach H    |\n";
+        double max_T_a = Tmin;
+        for (double T_ = Tmin; T_ <= Tmax; T_ += Tstep) {
+            double verticalAcceleration = calculate_acceleration_y(T_, m);
+            double time = calculate_time(h, verticalAcceleration);
+            cout << "| " << setw(6) << T_ << " | " 
+                << setw(18) << verticalAcceleration << " | "
+                << setw(18) << time << " |\n";
+            if (verticalAcceleration > calculate_acceleration_y(max_T_a, m))
+                max_T_a = T_;
+        }
+        cout << "\nMin time to reach hight: " << calculate_time(h, calculate_acceleration_y(max_T_a, m));
+        cout << "\nMax value of acceleration: " << calculate_acceleration_y(max_T_a, m);
+        cout << "\nThis value was reached with T: " << max_T_a;
+    }
+    
+
 
     void setTime(double t_) { t = t_; }
     void setAccelerationY(double a_y_) { a_y = a_y_; }
     void setAcceleration(double a_) { a = a_; }
-
+    void setMass(double m_) { m = m_; }
     void setParameters() {
         while (m <= 0) { cout << "Enter mass: "; cin >> m; }
         while (S <= 0) { cout << "\nEnter surface area: "; cin >> S; }
@@ -88,28 +107,20 @@ int main()
     
     double ro, h;
     
-    cout << "Enter ro: "; cin >> ro;
     cout << "Enter hight: "; cin >> h;
+    double m, Tmin, Tmax, Tstep;
+
+    cout << "\nEnter mass: "; cin >> m;
+    cout << "\nEnter Tmin: "; cin >> Tmin;
+    cout << "\nEnter Tmax: "; cin >> Tmax;
+    cout << "\nEnter Tstep: "; cin >> Tstep;
+
     
+    aircraft plane;
+    plane.setMass(m);
+    plane.calculateOptimalForce(h, Tmin, Tmax, Tstep);
 
-    int n;
-    cout << "Enter number of airplanes: ";
-    cin >> n;
 
-    aircraft* planes = new aircraft[n];
-    
-    for (int i = 0; i < n; i++) {
-        cout << "Plane #" << i + 1 << endl;
-        planes[i].setParameters();
-        planes[i].solve(ro, h);
-    }
-
-    for (int i = 0; i < n; i++){
-        cout << "\n\nPlane #" << i + 1;
-        planes[i].printParameters();
-    }
-    cout << "\n Plane with max accelertion: Plane #" << maxAccelerationIndex(n, planes) + 1;
-    cout << "\n\n\n\n";
     return 0;
 }
 
