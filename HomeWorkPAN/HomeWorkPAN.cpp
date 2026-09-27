@@ -29,6 +29,8 @@ public:
         if (a > 0) return "Horizontal";
         return "Down";
     }
+    double getTime() { return t; }
+    double getAcceleration() { return a; }
 
     void calculateVerticalAcceleration(double ro) { 
         a_y = calculate_acceleration_y(L, m); 
@@ -46,9 +48,9 @@ public:
         t = calculate_time(h, a_y);
     }
 
-    void setAcceleration(double a_) { a = a_; }
     void setTime(double t_) { t = t_; }
     void setAccelerationY(double a_y_) { a_y = a_y_; }
+    void setAcceleration(double a_) { a = a_; }
 
     void setParameters() {
         while (m <= 0) { cout << "Enter mass: "; cin >> m; }
@@ -71,52 +73,42 @@ public:
     void printParameters() {
         if (t < 0) cout << "\nPlane will never reach hight";
         else cout << "\nTime to reach hight: " << t;
-
+        cout << "\nAcceleration: " << a;
         cout << "\nY axis acceleration: " << a_y;
+        cout << "\nLifting force: " << L;
     }
 
-    double getTime() { return t; }
 };
-
+int maxAccelerationIndex(int n, aircraft* a);
 void sortByTime(int n, aircraft* a);
 
 
 int main()
 {
     
-    double ro = 1, h = 1;
-    /*
+    double ro, h;
+    
     cout << "Enter ro: "; cin >> ro;
     cout << "Enter hight: "; cin >> h;
-    */
+    
 
-    int n = 5;
-    //cout << "Enter number of airplanes: ";
-    //cin >> n;
+    int n;
+    cout << "Enter number of airplanes: ";
+    cin >> n;
 
     aircraft* planes = new aircraft[n];
-    /*
+    
     for (int i = 0; i < n; i++) {
         cout << "Plane #" << i + 1 << endl;
         planes[i].setParameters();
         planes[i].solve(ro, h);
     }
-    */
-    
-    planes[0].setAccelerationY(1); planes[0].calculateTime(ro, h);
-    planes[1].setAccelerationY(5); planes[1].calculateTime(ro, h);
-    planes[2].setAccelerationY(-1); planes[2].calculateTime(ro, h);
-    planes[3].setAccelerationY(2); planes[3].calculateTime(ro, h);
-    planes[4].setAccelerationY(3); planes[4].calculateTime(ro, h);
-
-
-
-    sortByTime(n, planes);
 
     for (int i = 0; i < n; i++){
         cout << "\n\nPlane #" << i + 1;
         planes[i].printParameters();
     }
+    cout << "\n Plane with max accelertion: Plane #" << maxAccelerationIndex(n, planes) + 1;
     cout << "\n\n\n\n";
     return 0;
 }
@@ -124,7 +116,9 @@ int main()
 
 
 double calculate_acceleration(double T, double D, double m) {
+    if (T - D < 0) return 0;
     return ((T - D) / m);
+
 }
 
 double calculate_acceleration_y(double L, double m) {
@@ -135,7 +129,7 @@ double calculate_L(double S, double V, double ro, double cl) {
 }
 
 double calculate_time(double h, double a_y) {
-    if (a_y < 0) return -1; // Если самолет снижается, то время = -1
+    if (a_y < 0) return -1;                                                         // Если самолет снижается, то время = -1
     return sqrt(2 * h / a_y);
 }
 
@@ -154,3 +148,10 @@ void sortByTime(int n, aircraft* a) {
     }
 }
 
+int maxAccelerationIndex(int n, aircraft* a) {
+    int max_ind = 0;
+    for (int i = 1; i < n; i++) 
+        if (a[max_ind].getAcceleration() < a[i].getAcceleration()) 
+            max_ind = i;
+    return max_ind;
+}
